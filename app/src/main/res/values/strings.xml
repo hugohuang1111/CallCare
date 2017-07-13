@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CallCare</string>
+    <string name="app_desc">这个应用会在骚扰电话打进来时，把铃声关掉，只是关掉铃声。让沉静于做事的你不被无意义的电话所打扰。</string>
+</resources>
