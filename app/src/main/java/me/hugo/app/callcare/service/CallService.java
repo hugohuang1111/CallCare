@@ -16,6 +16,8 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import me.hugo.app.callcare.util.ContectUtil;
+
 /**
  * Created by hugo on 12/07/2017.
  */
@@ -49,6 +51,7 @@ public class CallService extends Service {
         mAudioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mTelMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         mListener = new MyPhoneStateListener();
+        mListener.ctx = this;
         mTelMgr.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
 
 //        mListener.onCallStateChanged(TelephonyManager.CALL_STATE_RINGING, "18708111000");
@@ -56,6 +59,8 @@ public class CallService extends Service {
     }
 
     private class MyPhoneStateListener extends PhoneStateListener {
+        public Context ctx;
+
         @Override
         public void onCallStateChanged(int state, final String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
@@ -63,17 +68,20 @@ public class CallService extends Service {
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING: {
                     callBegin = true;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isBlack(incomingNumber)) {
-                                neeResume = true;
-                                if (callBegin) {
-                                    muteVolume();
+                    if (!ContectUtil.inContectList(ctx, incomingNumber)) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isBlack(incomingNumber)) {
+                                    neeResume = true;
+                                    if (callBegin) {
+                                        muteVolume();
+                                    }
                                 }
                             }
-                        }
-                    }).start();
+                        }).start();
+                    }
+
                     break;
                 }
                 case TelephonyManager.CALL_STATE_OFFHOOK:

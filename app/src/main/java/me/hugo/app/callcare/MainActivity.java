@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import me.hugo.app.callcare.service.CallService;
+import me.hugo.app.callcare.util.ContectUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 mService = null;
             }
         }, Context.BIND_AUTO_CREATE);
+
+        //ContectUtil.inContectList(this, "18702819799");
 
         Log.d("HHH", "CallCare Init");
     }
